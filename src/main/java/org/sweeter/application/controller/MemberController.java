@@ -34,6 +34,12 @@ public class MemberController {
 		member.setPw(pw);
 		
 		Member loginInfo = memberService.login(member);
+		if(loginInfo == null) {
+			Member failMember = new Member();
+			failMember.setId("");
+			failMember.setPw("");
+			return failMember;
+		}
 		return loginInfo;
 	}
 	
@@ -59,7 +65,15 @@ public class MemberController {
 	}
 	
 	//로그아웃 로직
-	
+	@RequestMapping("/logout")
+    public ModelAndView logout(HttpSession session) {
+        session.invalidate();
+        ModelAndView mv = new ModelAndView("redirect:/");
+        return mv;
+    }
+
+
+
 	
 	//회원가입 로직 - DB에 유저 정보 저장
 	@PostMapping("/register")
@@ -88,7 +102,7 @@ public class MemberController {
 	public String modify(Member member) {
 		memberService.modify(member);
 		
-		return "members/info";
+		return "members/modify";
 	}
 	
 	//유저 정보관리 로직 - 탈퇴
